@@ -9,23 +9,28 @@ Date: January 8, 2023
 const http = require("node:http");
 
 const { reqResHandler } = require("./helpers/reqRespHandler");
+const environments = require("./helpers/environment");
+const data = require("./lib/data");
+
+
 //scaffolded module {app obj}
 const app = {};
 
-//config
-app.config = {
-  port: 3000,
-};
-
-
+// @TODO
+//testing file system
+/*
+data.create("test", "new_file", { name: "Nazif Ishrak", age: 21 }, (err) =>
+  console.log("error was" + err)
+);
+*/
 app.reqResHandler = reqResHandler;
 //create a server
 
 app.createServer = () => {
   const server = http.createServer(app.reqResHandler);
 
-  server.listen(app.config.port, () => {
-    console.log(`listening to port ${app.config.port}`);
+  server.listen(environments.port, () => {
+    console.log(`listening to port ${environments.port}`);
   });
 };
 

@@ -10,6 +10,7 @@ const routes = require("../routes");
 const {
   notFoundHandler,
 } = require("../handlers/routeHandlers/notFoundHandler");
+
 //module scaffolding
 const handler = {};
 
@@ -44,17 +45,6 @@ handler.reqResHandler = (req, res) => {
     ? routes[trimmedPath]
     : notFoundHandler;
 
-  selectedHandler(reqProp, (statusCode, payload) => {
-    //Guarding types 
-    statusCode = typeof statusCode === "number" ? statusCode : 500;
-    payload = typeof payload === "object" ? payload : {};
-    //payload needs to be sent as an string JSON, so used stringify
-    payloadstr = JSON.stringify(payload);
-
-    res.writeHead(statusCode);
-    res.write(payloadstr);
-    res.end();
-  });
   req.on("data", (buffer) => {
     realTimeData += decoder.write(buffer);
   });
@@ -62,9 +52,27 @@ handler.reqResHandler = (req, res) => {
   req.on("end", () => {
     realTimeData += decoder.end();
     //resp handler
-    console.log(realTimeData); // after the event ends we will get the full data
+    // after the event ends we will get the full data
+    selectedHandler(reqProp, (statusCode, payload) => {
+      //Guarding types
+      statusCode = typeof statusCode === "number" ? statusCode : 500;
+      payload = typeof payload === "object" ? payload : {};
+      //payload needs to be sent as an string JSON, so used stringify
+      payloadstr = JSON.stringify(payload);
+
+      res.writeHead(statusCode);
+      res.write(payloadstr);
+      res.end();
+    });
     res.end("hello " + realTimeData);
   });
 };
 
 module.exports = handler;
+
+
+
+
+
+
+
