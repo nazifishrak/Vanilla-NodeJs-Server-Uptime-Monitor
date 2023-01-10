@@ -10,19 +10,12 @@ const http = require("node:http");
 
 const { reqResHandler } = require("./helpers/reqRespHandler");
 const environments = require("./helpers/environment");
-const data = require("./lib/data");
 
 
 //scaffolded module {app obj}
 const app = {};
 
-// @TODO
-//testing file system
-/*
-data.create("test", "new_file", { name: "Nazif Ishrak", age: 21 }, (err) =>
-  console.log("error was" + err)
-);
-*/
+
 app.reqResHandler = reqResHandler;
 //create a server
 
