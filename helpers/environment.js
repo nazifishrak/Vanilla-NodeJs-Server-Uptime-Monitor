@@ -13,11 +13,13 @@ const environments = {};
 environments.staging = {
   port: 3000,
   envName: "staging",
+  secretKey: 'hshsjhsjhs'
 };
 
 environments.production = {
   port: 5000,
   envName: "production",
+  secretKey:'hfuayfuiya'
 };
 
 //determine which environment was passed

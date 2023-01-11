@@ -11,6 +11,7 @@ const {
   notFoundHandler,
 } = require("../handlers/routeHandlers/notFoundHandler");
 
+const {parseJSON} = require('./utilities');
 //module scaffolding
 const handler = {};
 
@@ -51,6 +52,8 @@ handler.reqResHandler = (req, res) => {
 
   req.on("end", () => {
     realTimeData += decoder.end();
+
+    reqProp.body = parseJSON(realTimeData); //validate the data first to avoid parse error
     //resp handler
     // after the event ends we will get the full data
     selectedHandler(reqProp, (statusCode, payload) => {
@@ -58,21 +61,13 @@ handler.reqResHandler = (req, res) => {
       statusCode = typeof statusCode === "number" ? statusCode : 500;
       payload = typeof payload === "object" ? payload : {};
       //payload needs to be sent as an string JSON, so used stringify
-      payloadstr = JSON.stringify(payload);
-
+      let payloadstr = JSON.stringify(payload);
+      res.setHeader("Content-type", "application/json");
       res.writeHead(statusCode);
-      res.write(payloadstr);
-      res.end();
+      res.end(payloadstr);
     });
-    res.end("hello " + realTimeData);
+    // res.end("hello " + realTimeData);
   });
 };
 
 module.exports = handler;
-
-
-
-
-
-
-
