@@ -1,6 +1,6 @@
 /* 
 Title: Vanilla Node Server Uptime Monitor Application
-Description: A REST API THAT WILL MONITOR UP/DOWN time of url/links
+Description: A REST API that will monitor UP/DOWN time of url/links
 Author: Nazif Ishrak
 Date: January 8, 2023
 */

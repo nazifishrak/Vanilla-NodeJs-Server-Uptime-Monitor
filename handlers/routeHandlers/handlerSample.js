@@ -13,7 +13,7 @@ const handle = {};
 handle.sampleHandler = (reqProp, callback) => {
   console.log(reqProp);
   callback(200, {
-    message: "test URL",
+    message: "Hi Ramit",
   });
 };
 
