@@ -12,7 +12,6 @@ Date: Jan 10,2023
 const data = require("../../lib/data");
 const { hash } = require("../../helpers/utilities");
 const { parseJSON } = require("../../helpers/utilities");
-const {createRandomString}=require("../../helpers/utilities")
 //module scaffolding
 const handle = {};
 
@@ -28,7 +27,16 @@ handle._users = {};
 
 //POST
 handle._users.post = (reqProp, callback) => {
+  const fName = reqProp.body.firstName;
+  const lName = reqProp.body.lastName;
+  const phone_num = reqProp.body.phone;
+  const pass = reqProp.body.password;
 
+  const firstName =
+    typeof fName === "string" && fName.trim().length > 0 ? fName : false;
+
+  const lastName =
+    typeof lName === "string" && lName.trim().length > 0 ? lName : false;
 
   const phone =
     typeof phone_num === "string" && phone_num.trim().length === 11
@@ -38,40 +46,30 @@ handle._users.post = (reqProp, callback) => {
   const password =
     typeof pass === "string" && pass.trim().length > 0 ? pass : false;
 
-  if (phone && password) {
+  if (firstName && lastName && phone && password) {
     //Check if that user does not already exist
-    data.read("users", phone, (err, userData) => {
+    data.read("users", phone, (err, user) => {
       //if theere is err then it means the user does not exist, so we add
-      let hashedPassword =hash(password);
-      if (hashedPassword===userData.password){
-        //Generate a random token for the user    
-        let tokenId = createRandomString(20);
-        //currrent time + 1 hr in ms
-        let expires = Date.now() + 60*60*1000;
-
-        let tokenObject = {
-          'phone': phone,
-          'id' : tokenId,
-          'expires': expires,
+      if (err) {
+        let userObject = {
+          firstName: firstName,
+          lastName: lastName,
+          phone: phone,
+          password: hash(password),
         };
 
-        // storing token in data base
-        //use data librar functions
-        data.create('tokens', tokenId, tokenObject, (err2)=>{
-          if (!err2) {
-            callback(200, tokenObject);
+        data.create("users", phone, userObject, (err) => {
+          if (!err) {
+            callback(200, {
+              message: "User was created successfully",
+            });
           } else {
-            callback(500, {error: "There was a problem in server side."})
+            callback(500, { error: "Could not create user" });
           }
-        })
-        
-
-
-
-      }
-      else {
+        });
+      } else {
         callback(500, {
-          error: "Password is not valid",
+          error: "A user already exists with the same phone number",
         });
       }
     });

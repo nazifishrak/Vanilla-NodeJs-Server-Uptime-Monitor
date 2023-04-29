@@ -57,6 +57,7 @@ utilities.createRandomString = (str_len) => {
       let randomCharachter = possibleChars.charAt(random);
       output+=randomCharachter;
     }
+    return output;
   }
 };
 
