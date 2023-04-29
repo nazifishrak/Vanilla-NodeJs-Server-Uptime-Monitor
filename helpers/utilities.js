@@ -39,8 +39,24 @@ utilities.hash = (str) => {
       .digest("hex");
 
     return hash;
-  } else{
+  } else {
     return false;
+  }
+};
+
+//Creates a random string
+utilities.createRandomString = (str_len) => {
+  let length = typeof str_len === "number" && str_len > 0 ? str_len : false;
+
+  if (length) {
+    //raw random string generator
+    let possibleChars = "abcdefghijklmnopqrstuvwxyz1234567890";
+    let output ='';
+    for (let i = 0; i < str_len; i++) {
+      let random = Math.floor(Math.random() * possibleChars.length);
+      let randomCharachter = possibleChars.charAt(random);
+      output+=randomCharachter;
+    }
   }
 };
 

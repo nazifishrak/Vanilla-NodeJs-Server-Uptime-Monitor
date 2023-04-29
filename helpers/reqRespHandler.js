@@ -16,6 +16,7 @@ const {parseJSON} = require('./utilities');
 const handler = {};
 
 handler.reqResHandler = (req, res) => {
+  //Call
   //req handler
   //get and parse url
   const urlLink = req.url; //URL from the req obj
