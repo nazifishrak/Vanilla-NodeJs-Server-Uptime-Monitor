@@ -12,6 +12,7 @@ Date: Jan 10,2023
 const data = require("../../lib/data");
 const { hash } = require("../../helpers/utilities");
 const { parseJSON } = require("../../helpers/utilities");
+const tokenHandler=require('./tokenHandler')
 //module scaffolding
 const handle = {};
 
@@ -82,6 +83,8 @@ handle._users.post = (reqProp, callback) => {
 
 //GET
 handle._users.get = (reqProp, callback) => {
+
+  
   //check if the phone number is valid
 
   const phone_num = reqProp.queryStringObj.phone;
@@ -90,6 +93,11 @@ handle._users.get = (reqProp, callback) => {
       ? phone_num
       : false;
   if (phone) {
+//verify token
+let token = typeof(reqProp.headersObject.token) ==='string'? reqProp.headersObject.token: false;
+
+tokenHandler._token.verifyToken(token, phone, (tokenId)=>{
+if(tokenId){
     // Lookup the user
     data.read("users", phone, (err, user) => {
       if (!err && user) {
@@ -101,6 +109,13 @@ handle._users.get = (reqProp, callback) => {
         callback(404);
       }
     });
+} else{
+  callback(403, {
+    error: "User authentication failed"
+  })
+}
+})
+/////////////
   } else {
     callback(404, { error: "requested user was not found" });
   }
