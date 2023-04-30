@@ -44,7 +44,7 @@ utilities.hash = (str) => {
   }
 };
 
-//Creates a random string
+//Creates and retunrs a random string
 utilities.createRandomString = (str_len) => {
   let length = typeof str_len === "number" && str_len > 0 ? str_len : false;
 
