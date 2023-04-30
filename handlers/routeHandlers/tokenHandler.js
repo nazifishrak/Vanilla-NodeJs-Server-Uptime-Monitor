@@ -138,6 +138,33 @@ handle._token.put = (reqProp, callback) => {
   }
 };
 //DEL
-handle._token.delete = (reqProp, callback) => {};
+handle._token.delete = (reqProp, callback) => {  const idProp = reqProp.queryStringObj.id;
+  const id =
+    typeof idProp === "string" && idProp.trim().length === 20
+      ? idProp
+      : false;
+
+  if (id) {
+    //lookup the file with the given phone number
+
+    data.read("tokens", id, (err, tokenData) => {
+      if (!err && tokenData) {
+        data.delete("tokens", id, (err) => {
+          if (!err) {
+            callback(200, { message: "Deletion of token successful" });
+          } else {
+            callback(500, {
+              error: "There was an error while deleting (check nested)",
+            });
+          }
+        });
+      } else {
+        callback(500, { error: "There was a server side error" });
+      }
+    });
+  } else {
+    callback(400, { error: "There was a problem in your delete request" });
+  }
+};
 
 module.exports = handle;
