@@ -115,7 +115,7 @@ if(tokenId){
   })
 }
 })
-/////////////
+
   } else {
     callback(404, { error: "requested user was not found" });
   }
@@ -142,6 +142,14 @@ handle._users.put = (reqProp, callback) => {
       : false;
 
   if (phone) {
+
+
+//verify token
+let token = typeof(reqProp.headersObject.token) ==='string'? reqProp.headersObject.token: false;
+
+tokenHandler._token.verifyToken(token, phone, (tokenId)=>{
+if(tokenId){
+    // Lookup the user
     if (firstName || lastName || password) {
       //look up the user and check if it exists
       data.read("users", phone, (error, udata) => {
@@ -176,6 +184,24 @@ handle._users.put = (reqProp, callback) => {
     } else {
       callback(400, { error: "you have problem in your request" });
     }
+} else{
+  callback(403, {
+    error: "User authentication failed"
+  })
+}
+})
+
+
+
+
+
+
+
+
+
+
+
+
   } else {
     callback(400, { error: "invalid phone number please try again." });
   }
